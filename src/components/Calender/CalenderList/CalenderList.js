@@ -18,12 +18,14 @@ class CalenderList extends Component {
       //console.log(weekArray)
       let list = weekArray.map((item, index) =>{
         //console.log(item.now)
-        return ( <CalenderItem nowDate = {item.now}
-                        holiday = {item.holiday}
-                        sunday = {item.sunday}
-                        saturday = {item.saturday}
-                        day = {moment(item.date).format('DD')}
-                        index = {index}/> )
+        return ( <CalenderItem 
+                              date = {item.date}
+                              nowDate = {item.now}
+                              holiday = {item.holiday}
+                              sunday = {item.sunday}
+                              saturday = {item.saturday}
+                              day = {moment(item.date).format('DD')}
+                              index = {index}/> )
       })
       //7개가 들어가 있어야함 
      return (

@@ -1,27 +1,198 @@
 import { observable, action, computed } from 'mobx';
-import _ from 'lodash'
+import moment from 'moment';
+import _ from 'lodash';
 export default class CalenderStore{
-    @observable year = ''
-    @observable month = ''
+    @observable year = parseInt( moment().format('YYYY') )
+    @observable month =  parseInt( moment().format('M') )
+    @observable day = ''
+
+
+    @observable currentSelectYear =''
+    @observable currentSelectMonth =''
+    
     @observable selectedArr = [];
     @observable monthArray = [];
     @observable showPopup = false;
     @action
     setSelectedArr = (day) => {
-        
+        this.day = day;
     }
 
     @action
-    togglePopup = () => {
+    togglePopup = (day, date) => {
+        console.log( moment(date).format('M') ) ;
         console.log("togglePopup ")
-        let a = !this.showPopup;
-        this.showPopup = a
+        let s = !this.showPopup;
+        this.showPopup = s;
+        this.day = day;
+
+        this.currentSelectYear = moment(date).format('YYYY')
+        this.currentSelectMonth = moment(date).format('M')
+
     }
     @action
     closePopup = () => {
         
         console.log("togglePopup ")
         this.showPopup = false
-        
+
     }
+
+
+    /* - calender Maker  -*/
+    getDaysArrayByMonthBefore = (month, left) => {
+        let daysInMonth = moment(month, 'YYYY-MM').daysInMonth();
+        let count = daysInMonth - left
+        let arrDays = [];
+        console.log("daysInMonth ", daysInMonth)
+        while(daysInMonth !== count ) {
+          let current = moment(month).date(daysInMonth);
+          arrDays.push(current);
+          daysInMonth--;
+        }
+        return arrDays;
+    }
+    //이후 
+    getDaysArrayByMonthAfter = (month, left) => {
+        let arrDays = [];
+        let idx = 1;
+        while(idx !== left  ) {
+          let current = moment(month).date(idx);
+          arrDays.push(current);
+          idx++;
+        }
+        console.log("AFTER arrDAYS" ,arrDays)
+        return arrDays;
+    }
+
+
+    isHoliday = (date) =>{
+        //토요일, 일요일인 경우
+        //console.log(date)
+        let day = moment(date).format('dddd');
+        console.log(day)
+        if ( day === "Sunday"){
+            return 'Sunday';
+        }
+        if ( day === "Saturday"){
+            return 'Saturday';
+        }
+
+        else{
+            return false;
+        }
+    }
+
+    @action
+    getDaysArrayByMonth = () => {
+        //const {year , month} = this.state; 
+        let year = this.year
+        let month = this.month
+        let str = year + "-" + month
+        
+        let beforeMonth = moment(str).subtract(1, 'month').format('YYYY-MM');
+        let afterMonth = moment(str).add(1, 'month').format('YYYY-MM');
+        // console.log(beforeMonth)
+        // console.log(afterMonth)
+        //시작, 끝날짜 알기 
+        const startOfMonth = moment(str).startOf('month').format('dddd');
+        const endOfMonth   = moment(str).endOf('month').format('dddd');
+        
+        //첫째날 날짜 숫자로 환산
+        let firstDayNumber = moment(str).startOf('month').day();
+        // console.log(firstDayNumber)
+        // console.log("startOfMonth",startOfMonth )
+        // console.log("beforeMonth", endOfMonth)
+        let concatBeforeMonth = []
+        //시작 날짜가 일요일이 아닌경우 
+        // 월요일이 1이므로 //일요일이면 아무것도 추가할 필요없음 
+        if( startOfMonth !== "Sunday"){
+            console.log( firstDayNumber )
+            concatBeforeMonth= this.getDaysArrayByMonthBefore(beforeMonth,firstDayNumber);
+            console.log("concatBeforeMonth", concatBeforeMonth)
+        }
+        // //현재 날짜 
+        let daysInMonth = moment(str, 'YYYY-MM').daysInMonth();
+        let arrDays = [];
+
+        while(daysInMonth) {
+          let current = moment(str).date(daysInMonth);
+          arrDays.push({date : current , now : true });
+          daysInMonth--;
+        }
+
+        arrDays = arrDays.reverse();
+        console.log('arrDays!' , arrDays.slice())
+        for(let i = 0 ; i < concatBeforeMonth.length; i++){
+            arrDays.unshift({ date: concatBeforeMonth[i], now: false});
+        }
+
+        //6 * 7 = 42개
+        //앞에 더하고 42 - (더한값 ) = 를 다음달걸 붙히면 됌 
+        let left = 42 - ( arrDays.length - 1 );
+       // console.log(left);
+        let concatAfterMonth;
+        concatAfterMonth = this.getDaysArrayByMonthAfter(afterMonth, left);
+        for(let i = 0 ; i < concatAfterMonth.length; i++){
+            arrDays.push({ date : concatAfterMonth[i] , now: false});
+        }
+
+        let arr = []
+        let dayArr = []
+        let idx = 0;
+        //7단위로 나누기 
+        for(let i = 0; i < arrDays.length ; i++){
+            if( i % 7  === 0  && i !== 0){
+                dayArr.push(arr);
+                idx +=1;
+                arr = [];
+            }else if (i === arrDays.length-1){
+                dayArr.push(arr);
+            }
+            //console.log( this.isHoliday(arrDays[i].date) ? arrDays[i].concat({holiday : true}) : arrDays[i].concat({holiday : false}) ) 
+            arr.push(arrDays[i]);
+        }
+       
+        dayArr = dayArr.map((arr) => {
+            console.log(arr)
+            return (
+             arr = arr.map((info) => {
+                let holiday = this.isHoliday(info.date)
+                if( holiday === 'Sunday'){
+                    return (
+                        { ...info, holiday : true , sunday : true, saturday : false } 
+                    ) 
+                }else if(holiday === 'Saturday'){
+                    return(
+                        { ...info, holiday : true , sunday : false, saturday : true }
+                    )
+                }else{
+                    return(
+                        { ...info, holiday : false, }
+                    )
+                }
+             })
+            )
+        });
+        console.log('fsdfdsfsdfdsf', dayArr)
+        console.log(dayArr)
+        this.monthArray = dayArr;
+    }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -8,14 +8,29 @@
     right: 0;
     bottom: 0;
     margin: auto;
-    background-color: rgba(0,0,0, 0.5);
-  }
-  .popup_inner {
-    position: absolute;
-    left: 25%;
-    right: 25%;
-    top: 25%;
-    bottom: 25%;
-    margin: auto;
-    background: white;
+    background-color: rgba(0,0,0, 0.5);  
+    .popup_inner {
+        position: absolute;
+        left: 25%;
+        right: 25%;
+        top: 25%;
+        bottom: 25%;
+        margin: auto;
+        background: white;
+        .color_block{
+          font-size: 1rem;
+          text-align:  center;
+          color : white;
+          margin-top : auto;
+        }
+
+
+
+    }
+
+
+
+
+
+
   }

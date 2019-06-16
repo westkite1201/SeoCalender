@@ -9,7 +9,7 @@ class CalenderItem extends Component {
       select : false
     }
     selectedItem = (day) =>{
-      const {setSelectedArr, selectedArr,togglePopup} = this.props; 
+      const {setSelectedArr, selectedArr, togglePopup} = this.props; 
     // // setSelectedArr(selectedArr[day]);
     //   this.setState({
     //     select : !this.state.select
@@ -19,9 +19,18 @@ class CalenderItem extends Component {
     }
     render(){
 
-        const { day, nowDate,index, holiday, saturday, sunday,showPopup,togglePopup } = this.props;
+        const { date, 
+          day, 
+          nowDate,
+          index, 
+          holiday, 
+          saturday, 
+          sunday,
+           showPopup ,
+           togglePopup, } = this.props;
+           
         console.log(nowDate, holiday)
-
+        //let day = moment(date).format('DD')
         /* classNames 모듈 사용  */
         let tdClasses = classNames({
             [style.holiday] : holiday,
@@ -33,20 +42,24 @@ class CalenderItem extends Component {
 
         return(
             <td //onClick ={() =>this.selectedItem(day) }
-                onClick ={togglePopup}
+                onClick ={ () => togglePopup(day, date)}
                 key = {day} 
                 name = {day}
                 className = { tdClasses }>
-                <div style ={{height : '80px' , width : '200px'}}>
+                <div style ={{ width : '200px'}}>
                   {day}   
                 </div>
+                  <div className ={'block'} style ={{ width :'100%', height : '20px', backgroundColor: 'red'}} >
+                    이거하기
+                  </div>
           
             </td>
         ) 
     }
 }
 
-export default inject(({ calender }) => ({
+export default inject(({ calender, Popup }) => ({
+
     togglePopup : calender.togglePopup,
     month : calender.month,
     selectedArr : calender.selectedArr,
