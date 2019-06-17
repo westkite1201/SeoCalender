@@ -5,12 +5,12 @@ import classNames from 'classnames'
 import './Popup.scss'
 import { TwitterPicker } from 'react-color';
 import { observer, inject, } from 'mobx-react'
+import _ from 'lodash'
 import { width } from '@material-ui/system';
 
 class Popup extends Component {
   state = {
     toggle : false,
-    background :  '#B80000' // default color 
   }
     
   toggleColorPicker = () =>{
@@ -19,28 +19,64 @@ class Popup extends Component {
       })
   }
   handleChangeComplete = (color) => {
+      const { setBackgroundColor } =this.props;
       this.setState({ background: color.hex });
+      setBackgroundColor(color);
+  }
+  handleTitle = (e) => {
+    const { changeTitle } = this.props;
+    changeTitle(e.target.value); 
+  }
+
+  componentDidMount(){
+    //this.props 
   }
 
     render() {
+      
       const { 
+              background,
+              currentDate,
               day, 
+              calenderObject,
               currentSelectYear,
-              currentSelectMonth
+              currentSelectMonth,
+              calenderObjectMap,
             }  = this.props;
-
+            
+      console.log("currentDate ", currentDate)
       let style = {
-        backgroundColor : this.state.background  ,
+        backgroundColor : background  ,
         width : '100%',
         height : '50px',
       };
       let colors = ['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB']
-      let date = currentSelectYear + "년 " + currentSelectMonth + "월 "+ day+ "일"
+      let dateStr = currentSelectYear + "년 " + currentSelectMonth + "월 "+ day+ "일"
+      
+      let blockList = [];
+      if( !_.isNil( calenderObjectMap.get(currentDate))){
+        blockList = calenderObjectMap.get(currentDate).map((item, key)=>{
+          console.log(item.title)
+          let style = {
+            backgroundColor : item.background  ,
+            width : '50px',
+            height : '50px',
+          }
+          return (
+              <div style ={ style } key ={key} >
+                {item.title}
+              </div>
+          )
+       })
+     }
+      
+      
+      
       return (
           <div className='popup'>
             <div className='popup_inner'>
               <div className = 'display_date'>
-                  {date}
+                  {dateStr}
               </div>
               <div className = 'color_block' 
                    onClick = {this.toggleColorPicker} 
@@ -51,8 +87,8 @@ class Popup extends Component {
                 this.state.toggle ? 
                 (  
                   <TwitterPicker colors = {colors} 
-                               color={ this.state.background }
-                               onChange={ this.handleChangeComplete }
+                                color={ background }
+                                onChange={ this.handleChangeComplete }
                                />
                 ) : 
                 (
@@ -63,12 +99,16 @@ class Popup extends Component {
                 id="standard-with-placeholder"
                 label="일정"
                 placeholder="일정"
+                onChange = {this.handleTitle}
+                value = {calenderObject.title} 
                 //className={classes.textField}
                 margin="normal"
               />
-             
+              <div>
+                {blockList}
+              </div>
 
-
+              <button onClick={() => this.props.concatCalendar(currentDate)}>추가</button>
               <button onClick={() => this.props.closePopup()}>취소</button>
             </div>
           </div>
@@ -77,12 +117,19 @@ class Popup extends Component {
 }
 
 export default inject(({ calender }) => ({
+   setBackgroundColor: calender.setBackgroundColor,
+    calenderObjectMap : calender.calenderObjectMap,
+    calenderObject : calender.calenderObject,
+    changeTitle : calender.changeTitle,
+    concatCalendar : calender.concatCalendar,
+    currentDate  :calender.currentDate,
     currentSelectYear : calender.currentSelectYear,
     currentSelectMonth : calender.currentSelectMonth,
     year : calender.year,
     month : calender.month,
     day : calender.day,
     closePopup: calender.closePopup,
-    showPopup : calender.showPopup
+    showPopup : calender.showPopup,
+    background :calender.background,
 }))(observer( Popup));
 

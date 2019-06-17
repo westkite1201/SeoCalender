@@ -7,15 +7,40 @@ export default class CalenderStore{
     @observable day = ''
 
 
+
+    @observable currentDate = ''
     @observable currentSelectYear =''
     @observable currentSelectMonth =''
     
     @observable selectedArr = [];
     @observable monthArray = [];
     @observable showPopup = false;
+
+    @observable background = "#B80000" 
+
+
+
+    @observable calenderObjectMap = new Map();
+    @observable calenderObjList = [];
+    @observable calenderObject = { 
+        date : '',
+        title : '',
+        background: '#B80000',
+        description : ''
+    }
+
+
+
     @action
     setSelectedArr = (day) => {
         this.day = day;
+    }
+
+
+    @action 
+    setBackgroundColor = (color) => { 
+        this.background = color.hex
+        this.calenderObject.background = color.hex
     }
 
     @action
@@ -25,7 +50,7 @@ export default class CalenderStore{
         let s = !this.showPopup;
         this.showPopup = s;
         this.day = day;
-
+        this.currentDate = date;
         this.currentSelectYear = moment(date).format('YYYY')
         this.currentSelectMonth = moment(date).format('M')
 
@@ -37,6 +62,29 @@ export default class CalenderStore{
         this.showPopup = false
 
     }
+
+    @action 
+    changeTitle = (title) =>{
+        this.calenderObject.title = title; 
+    }   
+    @action
+    concatCalendar = (date) => {
+        console.log(date)
+        this.calenderObject.date = date;
+        let calenderObjListClone = _.isNil(this.calenderObjectMap.get(date) ) ? [] : this.calenderObjectMap.get(date) 
+        calenderObjListClone.push(this.calenderObject);
+        this.calenderObjectMap.set(date, calenderObjListClone);
+
+        this.calenderObject = {
+            date : '',
+            background : this.background,
+            title : '',
+            description : ''
+        } //초기화
+    }
+
+
+
 
 
     /* - calender Maker  -*/

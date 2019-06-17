@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import style from './CalenderItem.module.css'
 import Popup from '../../Popup'
 import { observer, inject, } from 'mobx-react'
+import _ from 'lodash'
 class CalenderItem extends Component {
     state = {
       select : false
@@ -26,10 +27,11 @@ class CalenderItem extends Component {
           holiday, 
           saturday, 
           sunday,
-           showPopup ,
-           togglePopup, } = this.props;
+          showPopup,
+          calenderObjectMap,
+          togglePopup, } = this.props;
            
-        console.log(nowDate, holiday)
+        //console.log(nowDate, holiday)
         //let day = moment(date).format('DD')
         /* classNames 모듈 사용  */
         let tdClasses = classNames({
@@ -39,6 +41,25 @@ class CalenderItem extends Component {
             [style.notpresentMonth] : !nowDate, 
             [style.selectedTr]: this.state.select }
         );
+        
+
+        let blockList = [];
+        if( !_.isNil( calenderObjectMap.get(date))){
+          blockList = calenderObjectMap.get(date).map((item, key)=>{
+            console.log(item.title)
+            let style = {
+              backgroundColor : item.background  ,
+              width : '50px',
+              height : '50px',
+            }
+            return (
+                <div style ={ style } key ={key} >
+                  {item.title}
+                </div>
+            )
+         })
+       }
+
 
         return(
             <td //onClick ={() =>this.selectedItem(day) }
@@ -49,9 +70,7 @@ class CalenderItem extends Component {
                 <div style ={{ width : '200px'}}>
                   {day}   
                 </div>
-                  <div className ={'block'} style ={{ width :'100%', height : '20px', backgroundColor: 'red'}} >
-                    이거하기
-                  </div>
+                  {blockList}
           
             </td>
         ) 
@@ -59,7 +78,8 @@ class CalenderItem extends Component {
 }
 
 export default inject(({ calender, Popup }) => ({
-
+    calenderObjectMap : calender.calenderObjectMap,
+    calenderObjList : calender.calenderObjList,
     togglePopup : calender.togglePopup,
     month : calender.month,
     selectedArr : calender.selectedArr,

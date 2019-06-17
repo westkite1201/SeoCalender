@@ -5,7 +5,7 @@ export default class CalenderStore{
     @observable title = ''
 
     @action
-    select = (title) => {
+    onChangeTitle = (title) => {
         this.title = title
     }
 
