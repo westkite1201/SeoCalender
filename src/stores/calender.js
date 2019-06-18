@@ -30,6 +30,18 @@ export default class CalenderStore{
     }
 
 
+    @action
+    removeSelectBlock = (key, currentDate) => {
+        console.log(key, currentDate)
+        let calenderObjList = this.calenderObjectMap.get(currentDate) 
+        calenderObjList = calenderObjList.filter((item, index) =>{
+            console.log('item', item, index )
+            return( index !== key )
+        })
+        this.calenderObjectMap.set(currentDate, calenderObjList) 
+    }
+
+
 
     @action
     setSelectedArr = (day) => {

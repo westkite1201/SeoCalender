@@ -6,7 +6,7 @@ import './Popup.scss'
 import { TwitterPicker } from 'react-color';
 import { observer, inject, } from 'mobx-react'
 import _ from 'lodash'
-import { width } from '@material-ui/system';
+import { width, textAlign } from '@material-ui/system';
 
 class Popup extends Component {
   state = {
@@ -42,6 +42,7 @@ class Popup extends Component {
               currentSelectYear,
               currentSelectMonth,
               calenderObjectMap,
+              removeSelectBlock,
             }  = this.props;
             
       console.log("currentDate ", currentDate)
@@ -59,12 +60,19 @@ class Popup extends Component {
           console.log(item.title)
           let style = {
             backgroundColor : item.background  ,
-            width : '50px',
+            width : '50%',
             height : '50px',
+            borderRadius: '10px',
+            textAlign : 'center',
+            color :'white',
+            padding : '10px',
+            margin : '5px'
           }
           return (
               <div style ={ style } key ={key} >
-                {item.title}
+                  {item.title} 
+                <button > 수정 </button> 
+                <button onClick = {() => removeSelectBlock(key, currentDate)}> 삭제  </button>
               </div>
           )
        })
@@ -117,6 +125,7 @@ class Popup extends Component {
 }
 
 export default inject(({ calender }) => ({
+  removeSelectBlock : calender.removeSelectBlock,
    setBackgroundColor: calender.setBackgroundColor,
     calenderObjectMap : calender.calenderObjectMap,
     calenderObject : calender.calenderObject,

@@ -49,8 +49,10 @@ class CalenderItem extends Component {
             console.log(item.title)
             let style = {
               backgroundColor : item.background  ,
-              width : '50px',
-              height : '50px',
+              width : '100%',
+              height : '1rem',
+              color : 'white',
+              fontSize : '0.8rem'
             }
             return (
                 <div style ={ style } key ={key} >
