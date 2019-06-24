@@ -19,6 +19,8 @@ export default class CalenderStore{
     @observable background = "#B80000" 
 
 
+    @observable editMode = false;
+    @observable editTitle = '';
 
     @observable calenderObjectMap = new Map();
     @observable calenderObjList = [];
@@ -30,12 +32,19 @@ export default class CalenderStore{
     }
 
 
+
+    @action
+    modifySelectBlock = (key, currentDate) => {
+        let calenderObjList = this.calenderObjectMap.get(currentDate) 
+        this.editTitle = calenderObjList[key].title;
+        this.editMode = !this.editMode
+    }
     @action
     removeSelectBlock = (key, currentDate) => {
         console.log(key, currentDate)
         let calenderObjList = this.calenderObjectMap.get(currentDate) 
         calenderObjList = calenderObjList.filter((item, index) =>{
-            console.log('item', item, index )
+            //console.log('item', item, index )
             return( index !== key )
         })
         this.calenderObjectMap.set(currentDate, calenderObjList) 
@@ -74,6 +83,10 @@ export default class CalenderStore{
         this.showPopup = false
 
     }
+    @action 
+    changeEditTitle = (title) =>{
+        this.editTitle = title; 
+    }   
 
     @action 
     changeTitle = (title) =>{

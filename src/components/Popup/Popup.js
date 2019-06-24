@@ -10,7 +10,7 @@ import { width, textAlign } from '@material-ui/system';
 
 class Popup extends Component {
   state = {
-    toggle : false,
+    toggle : false
   }
     
   toggleColorPicker = () =>{
@@ -27,6 +27,12 @@ class Popup extends Component {
     const { changeTitle } = this.props;
     changeTitle(e.target.value); 
   }
+  handleEditTitle = (e) => {
+    const { chagneeEditTitle } = this.props;
+    chagneeEditTitle(e.target.value); 
+  }
+
+
 
   componentDidMount(){
     //this.props 
@@ -43,6 +49,10 @@ class Popup extends Component {
               currentSelectMonth,
               calenderObjectMap,
               removeSelectBlock,
+              modifySelectBlock,
+              editMode,
+              editTitle,
+              changeEditTitle
             }  = this.props;
             
       console.log("currentDate ", currentDate)
@@ -70,9 +80,21 @@ class Popup extends Component {
           }
           return (
               <div style ={ style } key ={key} >
-                  {item.title} 
-                <button > 수정 </button> 
-                <button onClick = {() => removeSelectBlock(key, currentDate)}> 삭제  </button>
+                {
+                  editMode ?
+                  ( <input value={editTitle} onChange={changeEditTitle}/> ) :       
+                  (item.title)
+                }
+              <div>
+              {
+                editMode ?
+                <button onClick = {() => modifySelectBlock()}> 취소 </button>
+                  :
+                <button onClick = {() => modifySelectBlock(key, currentDate)}> 수정 </button> 
+              }
+                  
+                    <button onClick = {() => removeSelectBlock(key, currentDate)}> 삭제  </button>
+                  </div>
               </div>
           )
        })
@@ -126,6 +148,9 @@ class Popup extends Component {
 
 export default inject(({ calender }) => ({
   removeSelectBlock : calender.removeSelectBlock,
+  modifySelectBlock : calender.modifySelectBlock,
+  changeEditTitle : calender.changeEditTitle,
+  editTitle : calender.editTitle,
    setBackgroundColor: calender.setBackgroundColor,
     calenderObjectMap : calender.calenderObjectMap,
     calenderObject : calender.calenderObject,
@@ -134,6 +159,7 @@ export default inject(({ calender }) => ({
     currentDate  :calender.currentDate,
     currentSelectYear : calender.currentSelectYear,
     currentSelectMonth : calender.currentSelectMonth,
+    editMode : calender.editMode,
     year : calender.year,
     month : calender.month,
     day : calender.day,
