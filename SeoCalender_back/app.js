@@ -12,7 +12,7 @@ var indexRouter = require('./routes/index');
 // let busRouter = require('./routes/api/busController')
 // let fileRouter = require('./routes/api/fileController')
 let weatherApi = require('./routes/api/weatherController')
-
+let calenderApi = require('./routes/api/callenderController')
 //var passport = require('./config/passport/localStrategy')
 
 var session = require('express-session');
@@ -91,6 +91,7 @@ app.post('/api/login', (req, res, next) => {
 // app.use('/api/user', userRouter)
 // app.use('/api/board',boardApi)
 app.use('/api/weather', weatherApi);
+app.use('/api/calender',calenderApi)
 // app.use('/api/bus', busRouter)
 // app.use('/api/file', fileRouter)
 
