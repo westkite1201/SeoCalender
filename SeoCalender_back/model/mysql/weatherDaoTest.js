@@ -54,10 +54,10 @@ const getLocation = async (parameter) => {
 			const [rows] = await connection.query(sql, ['서울특별시', '관악구', '인헌동']);
 			
 			
-			//await connection.beginTransaction(); // START TRANSACTION
-			//const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
-			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
-			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			// await connection.beginTransaction(); // START TRANSACTION
+			// const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
+			// const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			// const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			await connection.commit(); // COMMIT
 			connection.release();
             return rows;

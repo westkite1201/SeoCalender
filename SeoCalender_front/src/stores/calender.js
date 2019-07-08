@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import moment from 'moment';
 import _ from 'lodash';
+import * as calenderApi from '../lib/api/calenderApi'
 export default class CalenderStore{
     @observable year = parseInt( moment().format('YYYY') )
     @observable month =  parseInt( moment().format('M') )
@@ -93,9 +94,23 @@ export default class CalenderStore{
         this.calenderObject.title = title; 
     }   
     @action
-    concatCalendar = (date) => {
+    concatCalendar = async(date) => {
         console.log(date)
         this.calenderObject.date = date;
+        try{ 
+            const response = await calenderApi.insertCalenderTodo( this.calenderObject )
+            if(response.status == 200){
+                const getCalenderResponse = await calenderApi.getCalender( date );
+                console.log(getCalenderResponse)
+
+            }
+        }catch(e){
+            console.log(e)
+        }
+        
+
+
+
         let calenderObjListClone = _.isNil(this.calenderObjectMap.get(date) ) ? [] : this.calenderObjectMap.get(date) 
         calenderObjListClone.push(this.calenderObject);
         this.calenderObjectMap.set(date, calenderObjListClone);

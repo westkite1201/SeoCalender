@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 let {PythonShell } = require('python-shell') 
 const weatherDao = require('../../model/mysql/weatherDao')
-const calenderDaoTest = require('../../model/mysql/calenderDaoTest')
+const calenderDaoNew = require('../../model/mysql/calenderDaoNew')
 const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
 const moment = require('moment')
@@ -34,11 +34,26 @@ getWeatherData = async(res, nx, ny) => {
 
 }
 
-
+function statusCodeErrorHandler(statusCode, callback , data) {
+  switch (statusCode) {
+      case 200:
+          callback(null, JSON.parse(data));
+          break;
+      default:
+          callback('error', JSON.parse(data));
+          break;
+  }
+}
 /* 디비 조회하기  */
-router.post('/dbtest',  async(req, res) => {
+router.post('/insertCalenderTodo',  async(req, res) => {
+  let data ={
+    DATE :  req.body.date,
+    TITLE :  req.body.title,
+    DESC :  req.body.desc,
+    COLOR :  req.body.color,
+  }
   try{
-    let rows = await calenderDaoTest.dbTest();
+    let rows = await calenderDaoNew.insertCalenderTodo(data);
     if(rows){
         console.log(rows)
         return res.json(rows)
@@ -50,6 +65,24 @@ router.post('/dbtest',  async(req, res) => {
   }
 })
 
+
+router.post('/getCalender',  async(req, res) => {
+  let data ={
+    DATE :  req.body.date,
+  }
+  try{
+    let rows = await calenderDaoNew.getCalender(data);
+    console.log('rows', rows)
+    if(rows){
+        console.log(rows)
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+})
 
 
 

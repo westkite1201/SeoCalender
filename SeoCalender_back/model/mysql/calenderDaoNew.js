@@ -1,22 +1,33 @@
 
 const dbHelpers = require('./mysqlHelpersPromise');
+const moment =require('moment')
 
-/* Step 2. get connection */
-const dbTest = async () => {
+/*  */
+const insertCalenderTodo = async (parameter) => {
 	try {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
-			const DATE = '2019-07-12';
-			const TITLE = 'TITLE';
-			const DESC = 'DESC';
-			const COLOR = 'RED'
+			const DATE = moment(parameter.DATE).format('YYYY-MM-DD')
+			const TITLE = parameter.TITLE
+			const DESC = parameter.DESC
+			const COLOR = parameter.COLOR
+
+			let sql = `
+				INSERT INTO calender ( date )
+				SELECT ?
+				FROM dual
+				WHERE NOT EXISTS (
+					SELECT *  
+					FROM calender
+					WHERE date =  ?
+				)`
 			await connection.beginTransaction(); // START TRANSACTION
-			await connection.query(`REPLACE INTO calender(date) VALUES(?)`, [DATE])
-			await connection.query(`REPLACE INTO calender_todo(date, title, description, color) VALUES(?, ?, ?, ?)`, [DATE, TITLE, DESC, COLOR])
+			await connection.query(sql, [DATE,DATE]);
+			await connection.query(`INSERT INTO calender_todo(date, title, description, color) VALUES(?, ?, ?, ?)`, [DATE, TITLE, DESC, COLOR]);
 			await connection.commit(); // COMMIT
 			connection.release();
-            //return rows;
+            return [ { statusCode : 200 }];
             
 		} catch(err) {
 			await connection.rollback(); // ROLLBACK
@@ -30,6 +41,44 @@ const dbTest = async () => {
 		return false;
 	}
 };
+
+
+const getCalender = async (parameter) => {
+	try {
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			/* Step 3. */
+			const DATE = moment(parameter.DATE).format('YYYY-MM-DD')
+
+			let sql = `
+				SELECT *
+				FROM calender_todo
+				WHERE date = ?
+			`
+			//await connection.beginTransaction(); // START TRANSACTION
+			const [rows] = await connection.query(sql, [DATE]);
+			await connection.commit(); // COMMIT
+			connection.release();
+            return {
+					data : rows , 
+					statusCode : 200 
+				};
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error', err);
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error', err);
+		return false;
+	}
+};
+
+
+
 
 
 /* Step 2. get connection */
@@ -85,6 +134,7 @@ const getLocation = async (parameter) => {
 
 
 module.exports = {
-	dbTest : dbTest,
+	insertCalenderTodo : insertCalenderTodo,
+	getCalender : getCalender,
 	getLocation : getLocation,
   }
