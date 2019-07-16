@@ -52,7 +52,8 @@ class Popup extends Component {
               modifySelectBlock,
               editMode,
               editTitle,
-              changeEditTitle
+              changeEditTitle,
+              getCalenderTodo
             }  = this.props;
             
       console.log("currentDate ", currentDate)
@@ -140,13 +141,16 @@ class Popup extends Component {
 
               <button onClick={() => this.props.concatCalendar(currentDate)}>추가</button>
               <button onClick={() => this.props.closePopup()}>취소</button>
-            </div>
+              <button onClick={getCalenderTodo}>getCalenderTodo</button> 
+            
+              </div>
           </div>
         );
     }
 }
 
 export default inject(({ calender }) => ({
+  getCalenderTodo : calender.getCalenderTodo,
   removeSelectBlock : calender.removeSelectBlock,
   modifySelectBlock : calender.modifySelectBlock,
   changeEditTitle : calender.changeEditTitle,

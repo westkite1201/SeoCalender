@@ -46,16 +46,16 @@ const getCalenderTodo = async (parameter) => {
 	try {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
-			/* Step 3. */
+		
 			const DATE = moment(parameter.DATE).format('YYYY-MM-DD')
 
 			let sql = `
 				select * 
 				from calender_todo 
-				where '2019-06' <= date <= '2019-08'
+				where ? <= date <= ?
 			`
 			//await connection.beginTransaction(); // START TRANSACTION
-			const [rows] = await connection.query(sql, [DATE]);
+			const [rows] = await connection.query(sql, [BEFORE_DATE, AFTER_DATE]);
 			await connection.commit(); // COMMIT
 			connection.release();
             return {

@@ -96,39 +96,67 @@ export default class CalenderStore{
     }   
 
     /* 캘린더 현재 달 , +- 1 가져오기  */
-    getCalenderTodo = async() =>{
 
+    getCalenderTodo = async() =>{
+        const { year, month } = this;
+        let beforeYear;
+        let beforeMonth;
+        let afterYear;
+        let afterMonth;
+        
+        if ( month - 1 === 0 ){
+            beforeYear = year - 1; 
+            beforeMonth = 12;
+       }else{
+            beforeYear = year
+            beforeMonth = month - 1;
+       }
+       if( month + 1 === 13 ){
+            afterYear = year + 1;
+            afterMonth = 1
+        }else{
+            afterYear = year;
+            afterMonth = month + 1 ;
+        }
+
+        let dateStr = year + "-"+ month;
+        console.log( moment(dateStr).subtract(1, 'months').format('YYYY-MM') ) ;
+        console.log( moment(dateStr).add(1, 'months').format('YYYY-MM')  ) ;
+
+        /*get API TODO  */
+        // try{ 
+        //     const response = await calenderApi.insertCalenderTodo( this.calenderObject )
+        //     if(response.status == 200){
+        //         const getCalenderResponse = await calenderApi.getCalender( date );
+        //         console.log(getCalenderResponse)
+
+        //     }
+        // }catch(e){
+        //     console.log(e)
+        // }
+        
     }
+        
 
 
 
     @action
     changeDate = (e) =>{
         const { year, month } = this;
-        console.log(year , " " , month)
-        let stateYear = year;
-        let stateMonth = month;
         let nowYear;
         let nowMonth;
-        console.log(e.target.name)
+
+        let dateStr = year + "-"+ month;
         if ( e.target.name === 'before'){
-            if ( month - 1 === 0){
-                 nowYear = stateYear - 1; 
-                 nowMonth = 12;
-            }else{
-                 nowYear = stateYear
-                 nowMonth = stateMonth - 1;
-            }
+            let beforeMoment =  moment(dateStr).subtract(1, 'months')
+            nowYear = beforeMoment.format('YYYY')
+            nowMonth = beforeMoment.format('MM')
         }else if ( e.target.name === 'after'){
-            if( month + 1 === 13 ){
-                 nowYear = stateYear + 1;
-                 nowMonth = 1
-            }else{
-                 nowYear = stateYear;
-                 nowMonth = stateMonth + 1 ;
-            }
+            let afterMoment = moment(dateStr).add(1, 'months')
+            nowYear = afterMoment.format('YYYY')
+            nowMonth = afterMoment.format('MM')
         }
-        console.log(nowYear, nowMonth)
+
    
         this.year = nowYear
         this.month = nowMonth
