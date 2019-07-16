@@ -11,11 +11,6 @@ class CalenderItem extends Component {
     }
     selectedItem = (day) =>{
       const {setSelectedArr, selectedArr, togglePopup} = this.props; 
-    // // setSelectedArr(selectedArr[day]);
-    //   this.setState({
-    //     select : !this.state.select
-    //   },() =>  togglePopup())
-
       togglePopup();
     }
     render(){
@@ -72,7 +67,11 @@ class CalenderItem extends Component {
                 <div style ={{ width : '200px'}}>
                   {day}   
                 </div>
+                <div>
                   {blockList}
+                </div>
+
+                  
           
             </td>
         ) 

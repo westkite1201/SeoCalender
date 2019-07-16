@@ -26,41 +26,13 @@ class CalenderTable extends Component {
         })
     }
     
-    changeDate = (e) =>{
-        const {year, month} = this.state;
-        console.log(year , " " , month)
-        let stateYear = year;
-        let stateMonth = month;
-        let nowYear;
-        let nowMonth;
-        console.log(e.target.name)
-        if ( e.target.name === 'before'){
-            if ( month - 1 === 0){
-                 nowYear = stateYear - 1; 
-                 nowMonth = 12;
-            }else{
-                 nowYear = stateYear
-                 nowMonth = stateMonth - 1;
-            }
-        }else if ( e.target.name === 'after'){
-            if( month + 1 === 13 ){
-                 nowYear = stateYear + 1;
-                 nowMonth = 1
-            }else{
-                 nowYear = stateYear;
-                 nowMonth = stateMonth + 1 ;
-            }
-        }
-        console.log(nowYear, nowMonth)
-        this.setState({
-            year : nowYear,
-            month :nowMonth
-        })
-    }
-
     render() {
-        const { year, month, 
-            selectedArr, showPopup, monthArray  } = this.props;
+        const { 
+            year, 
+            month, 
+            showPopup, 
+            monthArray,
+            changeDate } = this.props;
         console.log(monthArray)
 
         const monthList = monthArray.map((item, idx) => { 
@@ -93,8 +65,8 @@ class CalenderTable extends Component {
                        {monthList}
                     </tbody>
                 </Table>
-                <button onClick = {this.changeDate} name ='before' >좌측</button>
-                <button onClick = {this.changeDate} name= 'after' >우측</button>
+                <button onClick = {changeDate} name ='before' >좌측</button>
+                <button onClick = {changeDate} name= 'after' >우측</button>
             </div>
      )
   }
@@ -102,6 +74,7 @@ class CalenderTable extends Component {
 
 export default inject(({ calender }) => ({
     monthArray : calender.monthArray,
+    changeDate : calender.changeDate,
     showPopup : calender.showPopup,
     year : calender.year,
     month : calender.month,

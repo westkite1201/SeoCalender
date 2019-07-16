@@ -41,6 +41,40 @@ const insertCalenderTodo = async (parameter) => {
 		return false;
 	}
 };
+/* 현재 선택한 달, +- 1 한 전체 todo 가져오기  */
+const getCalenderTodo = async (parameter) => {
+	try {
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			/* Step 3. */
+			const DATE = moment(parameter.DATE).format('YYYY-MM-DD')
+
+			let sql = `
+				select * 
+				from calender_todo 
+				where '2019-06' <= date <= '2019-08'
+			`
+			//await connection.beginTransaction(); // START TRANSACTION
+			const [rows] = await connection.query(sql, [DATE]);
+			await connection.commit(); // COMMIT
+			connection.release();
+            return {
+					data : rows , 
+					statusCode : 200 
+				};
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error', err);
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error', err);
+		return false;
+	}
+};
 
 
 const getCalender = async (parameter) => {
@@ -81,54 +115,6 @@ const getCalender = async (parameter) => {
 
 
 
-/* Step 2. get connection */
-const getLocation = async (parameter) => {
-	try {
-		const locationA = parameter.LOCATION_A === '서울' ? parameter.LOCATION_A + '특별시' : ( parameter.LOCATION_A) ;
-		const locationB = parameter.LOCATION_B;
-		const locationC = parameter.LOCATION_C;
-		console.log(locationA)
-		console.log(locationB)
-		console.log(locationC)
-		
-		const connection = await dbHelpers.pool.getConnection(async conn => conn);
-		try {
-			/* Step 3. */
-			let sql = ` SELECT X,Y 
-						FROM KOREA_LOCATION
-						WHERE LOCATION_A = ? 
-							AND LOCATION_B = ? 
-							AND LOCATION_C = ? `
-			
-			
-			const [rows] = await connection.query(sql, ['서울특별시', '관악구', '인헌동']);
-			
-			
-			//await connection.beginTransaction(); // START TRANSACTION
-			//const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
-			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
-			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
-			await connection.commit(); // COMMIT
-			connection.release();
-            return rows;
-            
-		} catch(err) {
-			await connection.rollback(); // ROLLBACK
-			connection.release();
-			console.log('Query Error');
-			return false;
-        }
-        
-	} catch(err) {
-		console.log('DB Error');
-		return false;
-	}
-};
-
-
-
-
-
 
 
 
@@ -136,5 +122,5 @@ const getLocation = async (parameter) => {
 module.exports = {
 	insertCalenderTodo : insertCalenderTodo,
 	getCalender : getCalender,
-	getLocation : getLocation,
+	getCalenderTodo: getCalenderTodo,
   }
