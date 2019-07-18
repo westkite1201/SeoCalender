@@ -4,6 +4,7 @@ import _ from 'lodash';
 import * as calenderApi from '../lib/api/calenderApi'
 export default class CalenderStore{
     //일단 클라이언트 단에서 설정하는 걸로 
+    /* 현재 calender view 기준값  */
     @observable year = parseInt( moment().format('YYYY') )
     @observable month =  parseInt( moment().format('M') )
     @observable day = ''
@@ -95,51 +96,66 @@ export default class CalenderStore{
         this.calenderObject.title = title; 
     }   
 
-    /* 캘린더 현재 달 , +- 1 가져오기  */
+    /* 캘린더 현재 달 , +- 1 TODO 가져오기  */
 
     getCalenderTodo = async() =>{
         const { year, month } = this;
-        let beforeYear;
-        let beforeMonth;
-        let afterYear;
-        let afterMonth;
-        
-        if ( month - 1 === 0 ){
-            beforeYear = year - 1; 
-            beforeMonth = 12;
-       }else{
-            beforeYear = year
-            beforeMonth = month - 1;
-       }
-       if( month + 1 === 13 ){
-            afterYear = year + 1;
-            afterMonth = 1
-        }else{
-            afterYear = year;
-            afterMonth = month + 1 ;
-        }
 
         let dateStr = year + "-"+ month;
-        console.log( moment(dateStr).subtract(1, 'months').format('YYYY-MM') ) ;
-        console.log( moment(dateStr).add(1, 'months').format('YYYY-MM')  ) ;
+        let beforeDate =  moment(dateStr).subtract(1, 'months').format('YYYY-MM');
+        let afterDate =   moment(dateStr).add(1, 'months').format('YYYY-MM');
+        
 
         /*get API TODO  */
-        // try{ 
-        //     const response = await calenderApi.insertCalenderTodo( this.calenderObject )
-        //     if(response.status == 200){
-        //         const getCalenderResponse = await calenderApi.getCalender( date );
-        //         console.log(getCalenderResponse)
+        try{ 
+            const response = await calenderApi.getCalenderTodo( beforeDate, afterDate )
+            //성공시 
+            if( response.data.statusCode === 200 ){
 
-        //     }
-        // }catch(e){
-        //     console.log(e)
-        // }
-        
+                const calenderTodoData = response.data
+                /* 
+                    MAP에 세팅함 키= date, value = [] 리스트 
+                    있으면 키를 가져오고 세팅함 
+                */
+                calenderTodoData.data.map((item)=>{
+                    console.log(item)
+                    let formatDate = moment(item.date).format('YYYY-MM-DD')
+                    let calenderObjListClone = _.isNil(this.calenderObjectMap.get(formatDate) ) ? [] : this.calenderObjectMap.get(formatDate) 
+                    
+                    //console.log("calenderObjListClone" , calenderObjListClone)
+                    console.log("item.todo_num", item.todo_num)
+                        let calenderObject = {
+                            todoNum : item.todo_num,
+                            date : item.date,
+                            title : item.title,
+                            background: item.background,
+                            description : item.description,
+                        }
+                        //MAP.KEY = DATE,  VALUE = OBJ , OBJ[TODO_NUM] = [] <- 객체 배열 
+
+                        if(!calenderObjListClone[item.todo_num]){
+                            calenderObjListClone[item.todo_num] = calenderObject
+                        }
+                      
+
+
+                        console.log("calenderObjListClone" , calenderObjListClone)
+                        //calenderObjListClone[item.todo_num] = calenderObject;
+                        //calenderObjListClone.push(calenderObject);
+                       // this.calenderObjectMap.set(formatDate, calenderObjListClone);   
+                });
+            }
+
+  
+        }catch(e){
+            console.log(e)
+        }
+    
     }
         
 
 
-
+    /* 날짜 변경 시 */
     @action
     changeDate = (e) =>{
         const { year, month } = this;
@@ -157,7 +173,6 @@ export default class CalenderStore{
             nowMonth = afterMoment.format('MM')
         }
 
-   
         this.year = nowYear
         this.month = nowMonth
         this.getDaysArrayByMonth();
@@ -181,10 +196,10 @@ export default class CalenderStore{
             console.log(e)
         }
         
-
-        let calenderObjListClone = _.isNil(this.calenderObjectMap.get(date) ) ? [] : this.calenderObjectMap.get(date) 
+        let formatDate = moment(date).format('YYYY-MM-DD')
+        let calenderObjListClone = _.isNil(this.calenderObjectMap.get(formatDate) ) ? [] : this.calenderObjectMap.get(date) 
         calenderObjListClone.push(this.calenderObject);
-        this.calenderObjectMap.set(date, calenderObjListClone);
+        this.calenderObjectMap.set(formatDate, calenderObjListClone);
 
         this.calenderObject = {
             date : '',

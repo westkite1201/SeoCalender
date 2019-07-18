@@ -47,7 +47,8 @@ const getCalenderTodo = async (parameter) => {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 		
-			const DATE = moment(parameter.DATE).format('YYYY-MM-DD')
+			const BEFORE_DATE = parameter.BEFORE_DATE
+			const AFTER_DATE = parameter.AFTER_DATE
 
 			let sql = `
 				select * 
@@ -59,7 +60,7 @@ const getCalenderTodo = async (parameter) => {
 			await connection.commit(); // COMMIT
 			connection.release();
             return {
-					data : rows , 
+					data : rows, 
 					statusCode : 200 
 				};
             

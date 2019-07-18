@@ -15,7 +15,8 @@ class CalenderItem extends Component {
     }
     render(){
 
-        const { date, 
+        const { 
+          date,  //moment 객체 
           day, 
           nowDate,
           index, 
@@ -35,13 +36,15 @@ class CalenderItem extends Component {
             [style.sunday] : sunday,
             [style.notpresentMonth] : !nowDate, 
             [style.selectedTr]: this.state.select }
-        );
-        
+        ); 
+    
+    
 
         let blockList = [];
-        if( !_.isNil( calenderObjectMap.get(date))){
-          blockList = calenderObjectMap.get(date).map((item, key)=>{
-            console.log(item.title)
+        let formatDate =  moment(date).format('YYYY-MM-DD')
+        if( !_.isNil( calenderObjectMap.get(formatDate))){
+          blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
+   
             let style = {
               backgroundColor : item.background  ,
               width : '100%',

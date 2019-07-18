@@ -14,3 +14,12 @@ export const getCalender  = (date) =>{
    }
    return (axios.post("http://localhost:3031/api/calender/getCalender",data)) 
 }
+
+//get CalenderTodo 
+export const getCalenderTodo  = (beforeDate, afterDate) =>{
+   let data = {
+        beforeDate : beforeDate,
+        afterDate : afterDate
+   }
+   return (axios.post("http://localhost:3031/api/calender/getCalenderTodo", data)) 
+}
