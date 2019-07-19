@@ -141,7 +141,7 @@ class Popup extends Component {
 
               <button onClick={() => this.props.concatCalendar(currentDate)}>추가</button>
               <button onClick={() => this.props.closePopup()}>취소</button>
-              <button onClick={getCalenderTodo}>getCalenderTodo</button> 
+              <button onClick={() =>getCalenderTodo()}>getCalenderTodo</button> 
             
               </div>
           </div>

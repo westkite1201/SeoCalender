@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, toJS } from 'mobx';
 import moment from 'moment';
 import _ from 'lodash';
 import * as calenderApi from '../lib/api/calenderApi'
@@ -33,6 +33,8 @@ export default class CalenderStore{
         background: '#B80000',
         description : ''
     }
+
+    @observable calenderArray;
 
 
 
@@ -98,6 +100,7 @@ export default class CalenderStore{
 
     /* 캘린더 현재 달 , +- 1 TODO 가져오기  */
 
+    @action
     getCalenderTodo = async() =>{
         const { year, month } = this;
 
@@ -106,45 +109,41 @@ export default class CalenderStore{
         let afterDate =   moment(dateStr).add(1, 'months').format('YYYY-MM');
         
 
-        /*get API TODO  */
+        
         try{ 
             const response = await calenderApi.getCalenderTodo( beforeDate, afterDate )
             //성공시 
             if( response.data.statusCode === 200 ){
-
+                console.log('1')
+                let calenderArrayClone = Array(Array(), Array());
                 const calenderTodoData = response.data
-                /* 
-                    MAP에 세팅함 키= date, value = [] 리스트 
-                    있으면 키를 가져오고 세팅함 
-                */
                 calenderTodoData.data.map((item)=>{
                     console.log(item)
-                    let formatDate = moment(item.date).format('YYYY-MM-DD')
-                    let calenderObjListClone = _.isNil(this.calenderObjectMap.get(formatDate) ) ? [] : this.calenderObjectMap.get(formatDate) 
-                    
-                    //console.log("calenderObjListClone" , calenderObjListClone)
-                    console.log("item.todo_num", item.todo_num)
-                        let calenderObject = {
+                    let calenderObject = {
                             todoNum : item.todo_num,
                             date : item.date,
                             title : item.title,
                             background: item.background,
                             description : item.description,
-                        }
-                        //MAP.KEY = DATE,  VALUE = OBJ , OBJ[TODO_NUM] = [] <- 객체 배열 
-
-                        if(!calenderObjListClone[item.todo_num]){
-                            calenderObjListClone[item.todo_num] = calenderObject
-                        }
-                      
-
-
-                        console.log("calenderObjListClone" , calenderObjListClone)
-                        //calenderObjListClone[item.todo_num] = calenderObject;
-                        //calenderObjListClone.push(calenderObject);
-                       // this.calenderObjectMap.set(formatDate, calenderObjListClone);   
+                    }
+                    let formatDate = moment(item.date).format('YYYY-MM-DD')
+                    if(!calenderArrayClone[formatDate]){
+                        console.log('tq')
+                        calenderArrayClone[formatDate] = {} 
+                    }
+                    if(!calenderArrayClone[formatDate][item.todo_num]){
+                        console.log('tqtq')
+                        calenderArrayClone[formatDate][item.todo_num] = calenderObject
+                    }
                 });
+                console.log('2')
+                console.log(calenderArrayClone)
+                let cloneArr = toJS(calenderArrayClone)
+                console.log(cloneArr)
+                this.calenderArray = cloneArr
+                console.log("this.calenderArray ", this.calenderArray)
             }
+           
 
   
         }catch(e){

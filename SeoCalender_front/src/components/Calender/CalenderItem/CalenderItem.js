@@ -25,6 +25,7 @@ class CalenderItem extends Component {
           sunday,
           showPopup,
           calenderObjectMap,
+          calenderArray,
           togglePopup, } = this.props;
            
         //console.log(nowDate, holiday)
@@ -42,23 +43,28 @@ class CalenderItem extends Component {
 
         let blockList = [];
         let formatDate =  moment(date).format('YYYY-MM-DD')
-        if( !_.isNil( calenderObjectMap.get(formatDate))){
-          blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
+    
+       
+  
+
+
+      //   if( !_.isNil( calenderObjectMap.get(formatDate))){
+      //     blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
    
-            let style = {
-              backgroundColor : item.background  ,
-              width : '100%',
-              height : '1rem',
-              color : 'white',
-              fontSize : '0.8rem'
-            }
-            return (
-                <div style ={ style } key ={key} >
-                  {item.title}
-                </div>
-            )
-         })
-       }
+      //       let style = {
+      //         backgroundColor : item.background  ,
+      //         width : '100%',
+      //         height : '1rem',
+      //         color : 'white',
+      //         fontSize : '0.8rem'
+      //       }
+      //       return (
+      //           <div style ={ style } key ={key} >
+      //             {item.title}
+      //           </div>
+      //       )
+      //    })
+      //  }
 
 
         return(
@@ -82,6 +88,7 @@ class CalenderItem extends Component {
 }
 
 export default inject(({ calender, Popup }) => ({
+    calenderArray : calender.calenderArray,
     calenderObjectMap : calender.calenderObjectMap,
     calenderObjList : calender.calenderObjList,
     togglePopup : calender.togglePopup,
