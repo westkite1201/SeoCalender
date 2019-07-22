@@ -48,23 +48,25 @@ class CalenderItem extends Component {
   
 
 
-      //   if( !_.isNil( calenderObjectMap.get(formatDate))){
-      //     blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
-   
-      //       let style = {
-      //         backgroundColor : item.background  ,
-      //         width : '100%',
-      //         height : '1rem',
-      //         color : 'white',
-      //         fontSize : '0.8rem'
-      //       }
-      //       return (
-      //           <div style ={ style } key ={key} >
-      //             {item.title}
-      //           </div>
-      //       )
-      //    })
-      //  }
+        if( !_.isNil( calenderObjectMap.get(formatDate))){
+          blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
+                if(!_.isNil(item)){
+                  let style = {
+                    backgroundColor : item.background  ,
+                    width : '100%',
+                    height : '1rem',
+                    color : 'white',
+                    fontSize : '0.8rem'
+                  }
+                  return (
+                      <div style ={ style } key ={key} >
+                        {item.title}
+                      </div>
+                  )
+                }
+
+         })
+       }
 
 
         return(

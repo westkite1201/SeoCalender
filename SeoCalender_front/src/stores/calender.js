@@ -108,17 +108,14 @@ export default class CalenderStore{
         let beforeDate =  moment(dateStr).subtract(1, 'months').format('YYYY-MM');
         let afterDate =   moment(dateStr).add(1, 'months').format('YYYY-MM');
         
-
-        
         try{ 
             const response = await calenderApi.getCalenderTodo( beforeDate, afterDate )
             //성공시 
             if( response.data.statusCode === 200 ){
-                console.log('1')
                 let calenderArrayClone = Array(Array(), Array());
                 const calenderTodoData = response.data
                 calenderTodoData.data.map((item)=>{
-                    console.log(item)
+                    //console.log(item)
                     let calenderObject = {
                             todoNum : item.todo_num,
                             date : item.date,
@@ -128,20 +125,20 @@ export default class CalenderStore{
                     }
                     let formatDate = moment(item.date).format('YYYY-MM-DD')
                     if(!calenderArrayClone[formatDate]){
-                        console.log('tq')
-                        calenderArrayClone[formatDate] = {} 
+                        calenderArrayClone[formatDate] = []
                     }
                     if(!calenderArrayClone[formatDate][item.todo_num]){
-                        console.log('tqtq')
                         calenderArrayClone[formatDate][item.todo_num] = calenderObject
                     }
                 });
-                console.log('2')
-                console.log(calenderArrayClone)
-                let cloneArr = toJS(calenderArrayClone)
-                console.log(cloneArr)
-                this.calenderArray = cloneArr
-                console.log("this.calenderArray ", this.calenderArray)
+
+
+                let calenderObjectMapClone = new Map(); 
+                Object.keys(calenderArrayClone).map((date)=>{
+                    calenderObjectMapClone.set(date, calenderArrayClone[date])
+                })
+                this.calenderObjectMap = calenderObjectMapClone
+
             }
            
 
