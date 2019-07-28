@@ -1,5 +1,6 @@
 // @material-ui/icons
 import CalenderTable from '../components/Calender/CalenderTable'
+import CalenderTest from '../components/Calender/CalenderTest'
 
 // <Route exact path = {`${match.url}/notice`} component ={Board}/>
 // <Switch>
@@ -10,15 +11,15 @@ import CalenderTable from '../components/Calender/CalenderTable'
 
 
 const dashboardRoutes = [
-  // {
-  //   sideView: true, 
-  //   //exact : true,
-  //   path: "/WriteBoardCard",
-  //   sidebarName: "WriteBoardCard",
-  //   navbarName: "WriteBoardCard login",
-  //   icon: WriteBoardCard,
-  //   component: Login
-  // },
+  {
+    sideView: true, 
+    //exact : true,
+    path: "/CalenderTest",
+    sidebarName: "CalenderTest",
+    navbarName: "CalenderTest login",
+    icon: CalenderTest,
+    component: CalenderTest
+  },
 
   {
     sideView: true, 

@@ -105,8 +105,8 @@ export default class CalenderStore{
         const { year, month } = this;
 
         let dateStr = year + "-"+ month;
-        let beforeDate =  moment(dateStr).subtract(1, 'months').format('YYYY-MM');
-        let afterDate =   moment(dateStr).add(1, 'months').format('YYYY-MM');
+        let beforeDate = moment(dateStr).subtract(1, 'months').format('YYYY-MM');
+        let afterDate = moment(dateStr).add(1, 'months').format('YYYY-MM');
         
         try{ 
             const response = await calenderApi.getCalenderTodo( beforeDate, afterDate )

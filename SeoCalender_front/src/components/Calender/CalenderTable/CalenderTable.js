@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Input } from 'reactstrap';
 import CalenderList from '../CalenderList';
 import moment from 'moment'
 import Popup from '../../Popup'
 import { observer, inject, } from 'mobx-react'
+import './CalenderTable.scss'
 import * as calenderApi from '../../../lib/api/calenderApi'
 
 class CalenderTable extends Component {
@@ -18,6 +18,7 @@ class CalenderTable extends Component {
     }
     componentDidMount(){
         this.props.getDaysArrayByMonth();
+        this.props.getCalenderTodo();
     }
 
     handleDate = (e) =>{
@@ -26,42 +27,6 @@ class CalenderTable extends Component {
         })
     }
 
-    getCalenderTodo = async() =>{
-        const { year, month } = this.state;
-        let dateStr = year + "-"+ month;
-        let beforeDate =  moment(dateStr).subtract(1, 'months').format('YYYY-MM');
-        let afterDate =   moment(dateStr).add(1, 'months').format('YYYY-MM');     
-        let calenderArray = Array(Array(), Array());
-        //let calenderArray = Array();
-        try{ 
-            const response = await calenderApi.getCalenderTodo( beforeDate, afterDate )
-            //성공시 
-            if( response.data.statusCode === 200 ){
-                const calenderTodoData = response.data
-
-                calenderTodoData.data.map((item)=>{
-                    let calenderObject = {
-                            todoNum : item.todo_num,
-                            date : item.date,
-                            title : item.title,
-                            background: item.background,
-                            description : item.description,
-                    }
-                    let formatDate = moment(item.date).format('YYYY-MM-DD')
-                    if(!calenderArray[formatDate]){
-                        calenderArray[formatDate] = [] 
-                    }
-                    if(!calenderArray[formatDate][item.todo_num]){
-                        calenderArray[formatDate][item.todo_num] = calenderObject
-                    }
-                });
-            }
-            console.log("calenderArray", calenderArray)
-        }catch(e){
-            console.log(e)
-        }
-    
-    }
 
     
     
@@ -88,7 +53,7 @@ class CalenderTable extends Component {
                 <input placeholder ='YYYY-MM' 
                         onChange = {this.handleDate} 
                         value ={this.state.value}/>
-                <Table responsive >
+                <table className = "table">
                     <thead>
                         <tr>
                             <th>일</th>
@@ -103,7 +68,7 @@ class CalenderTable extends Component {
                     <tbody>
                        {monthList}
                     </tbody>
-                </Table>
+                </table>
                 <button onClick = {changeDate} name ='before' >좌측</button>
                 <button onClick = {changeDate} name= 'after' >우측</button>
                 <button onClick = {this.getCalenderTodo}  >테스트</button>
@@ -113,6 +78,7 @@ class CalenderTable extends Component {
 }
 
 export default inject(({ calender }) => ({
+    getCalenderTodo : calender.getCalenderTodo,
     monthArray : calender.monthArray,
     changeDate : calender.changeDate,
     showPopup : calender.showPopup,

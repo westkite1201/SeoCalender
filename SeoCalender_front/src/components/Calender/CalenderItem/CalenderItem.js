@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import moment from 'moment'
 import classNames from 'classnames'
-import style from './CalenderItem.module.css'
+import './CalenderItem.scss'
 import Popup from '../../Popup'
 import { observer, inject, } from 'mobx-react'
 import _ from 'lodash'
@@ -32,22 +32,19 @@ class CalenderItem extends Component {
         //let day = moment(date).format('DD')
         /* classNames 모듈 사용  */
         let tdClasses = classNames({
-            [style.holiday] : holiday,
-            [style.saturday] : saturday,
-            [style.sunday] : sunday,
-            [style.notpresentMonth] : !nowDate, 
-            [style.selectedTr]: this.state.select }
+            table : true,
+            holiday : holiday,
+            saturday: saturday,
+            sunday : sunday,
+            notpresentMonth : !nowDate, 
+            selectedTr: this.state.select }
         ); 
-    
-    
+      
 
         let blockList = [];
         let formatDate =  moment(date).format('YYYY-MM-DD')
     
-       
-  
-
-
+      
         if( !_.isNil( calenderObjectMap.get(formatDate))){
           blockList = calenderObjectMap.get(formatDate).map((item, key)=>{
                 if(!_.isNil(item)){
@@ -55,7 +52,7 @@ class CalenderItem extends Component {
                     backgroundColor : item.background  ,
                     width : '100%',
                     height : '1rem',
-                    color : 'white',
+                    color : 'black',
                     fontSize : '0.8rem'
                   }
                   return (
@@ -74,8 +71,9 @@ class CalenderItem extends Component {
                 onClick ={ () => togglePopup(day, date)}
                 key = {day} 
                 name = {day}
-                className = { tdClasses }>
-                <div style ={{ width : '200px'}}>
+                className = { tdClasses } 
+               >
+                <div style ={{ width : '200px' }}>
                   {day}   
                 </div>
                 <div>

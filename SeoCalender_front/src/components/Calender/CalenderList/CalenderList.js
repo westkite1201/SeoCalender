@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import classNames from 'classnames'
 
 import CalenderItem from '../CalenderItem'
 import { observer, inject, } from 'mobx-react'
@@ -18,7 +17,7 @@ class CalenderList extends Component {
       //console.log(weekArray)
       let list = weekArray.map((item, index) =>{
         //console.log(item.now)
-        return ( <CalenderItem 
+        return ( <CalenderItem
                               date = {item.date}
                               nowDate = {item.now}
                               holiday = {item.holiday}
@@ -29,7 +28,7 @@ class CalenderList extends Component {
       })
       //7개가 들어가 있어야함 
      return (
-          <tr key = {idx}>
+          <tr key = {idx} >
             {list}    
           </tr>
     )
