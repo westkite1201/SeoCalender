@@ -107,7 +107,7 @@ class CalenderTodoModal extends Component {
                 (  
                   <TwitterPicker colors = {colors} 
                                 color={ popup.background }
-                                onChange={ popup.setBackgroundColor }
+                                onChange={popup.setBackgroundColor }
                                />
                 ) : 
                 (
