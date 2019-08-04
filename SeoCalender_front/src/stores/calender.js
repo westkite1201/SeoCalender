@@ -3,6 +3,11 @@ import moment from 'moment';
 import _ from 'lodash';
 import * as calenderApi from '../lib/api/calenderApi'
 export default class CalenderStore{
+    @observable todayDate  = moment();
+
+
+
+
     //일단 클라이언트 단에서 설정하는 걸로 
     /* 현재 calender view 기준값  */
     @observable year = parseInt( moment().format('YYYY') )
@@ -36,6 +41,19 @@ export default class CalenderStore{
 
     @observable calenderArray;
 
+
+
+    //[NEW]
+    @action 
+    changeMonth = (e) =>{
+        let currentDate = this.todayDate
+        if ( e.target.name === 'before'){
+            this.todayDate = moment(currentDate).subtract(1, 'months')
+        }else if ( e.target.name === 'after'){
+            this.todayDate = moment(currentDate).add(1, 'months')
+
+        }
+    }
 
 
     @action
@@ -140,9 +158,6 @@ export default class CalenderStore{
                 this.calenderObjectMap = calenderObjectMapClone
 
             }
-           
-
-  
         }catch(e){
             console.log(e)
         }

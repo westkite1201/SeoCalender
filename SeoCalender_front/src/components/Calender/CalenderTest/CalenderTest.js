@@ -1,10 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import moment from 'moment'
+import CalendarTodoModal from './CalenderTodoModal'
 import './CalenderTest.scss';
+import CalenderItem from './CalenderItem'
+import { observer, inject, } from 'mobx-react'
+import CalenderTodoModal from './CalenderTodoModal';
 class CalenderTest extends Component {
 
+    componentDidMount(){
+      this.props.getCalenderTodo();
+      console.log( this.props.todayDate )
+    }
      generate = () => {
-      const today = moment();
+      const { todayDate } = this.props;
+      const today = todayDate;
       const startWeek = today.clone().startOf('month').week();
       const endWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
       let calendar = [];
@@ -18,7 +27,7 @@ class CalenderTest extends Component {
                 let isGrayed = current.format('MM') === today.format('MM') ? '' : 'grayed';
                 return (
                   <div className={`box  ${isSelected} ${isGrayed}`} key={i}>
-                    <span className={`text`}>{current.format('D')}</span>
+                    <CalenderItem nowDate = {current}/>
                   </div>
                 )
               })
@@ -30,12 +39,24 @@ class CalenderTest extends Component {
     }
     
     render() {
+      const { todayDate,
+              changeMonth,
+              showTodoModal } = this.props;
         return (
+          <Fragment>
+        
             <div className="Calendar">
+            {
+
+              showTodoModal ? 
+              <CalenderTodoModal showTodoModal ={showTodoModal}/>
+               : 
+              null
+            }
             <div className="head">
-              <button></button>
-              <span className="title">December 2016</span>
-              <button></button>
+              <button name ='before' onClick = {changeMonth}>이전</button>
+              <span className="title"> {todayDate.format('YYYY-MM')}</span>
+              <button name ='after' onClick = {changeMonth}>다음</button>
             </div>
             <div className="body">
               <div className="row">
@@ -67,9 +88,15 @@ class CalenderTest extends Component {
            
             </div>
           </div>
+          </Fragment>
         )
     }
 }
 
 
-export default CalenderTest;
+export default inject(({ calender, popup }) => ({
+  showTodoModal : popup.showTodoModal,
+  todayDate  : calender.todayDate,
+  changeMonth : calender.changeMonth,
+  getCalenderTodo : calender.getCalenderTodo,
+}))(observer( CalenderTest));
