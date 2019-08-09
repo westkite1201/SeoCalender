@@ -7,22 +7,22 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { TwitterPicker } from 'react-color';
 const styles = theme => ({
-    // container: {
-    //   display: 'flex',
-    //   flexWrap: 'wrap',
-    // },
-    // textField: {
-    //   marginLeft: theme.spacing.unit,
-    //   marginRight: theme.spacing.unit,
-    //   width: '95%',
-    // },
-    // dense: {
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: '95%',
+    },
+    dense: {
 
-    //   marginTop: 19,
-    // },
-    // menu: {
-    //   width: 200,
-    // },
+      marginTop: 19,
+    },
+    menu: {
+      width: 200,
+    },
 
   });
   
@@ -106,7 +106,7 @@ class CalenderTodoModal extends Component {
                 popup.showColorPicker ? 
                 (  
                   <TwitterPicker colors = {colors} 
-                                color={ popup.background }
+                                color={ popup.calenderTodoObject.background }
                                 onChange={popup.setBackgroundColor }
                                />
                 ) : 
@@ -117,9 +117,44 @@ class CalenderTodoModal extends Component {
             </div>
 
             <div className="modal-body">
-            <p>Animates a modal in and out by changing the state of the component.</p>
-						<p>In this sample the modal animation is controlled by changing the state of the main component, then this state is passed as a prop to the modal component. The in/out animation of the modal depends on the value of this prop passed to it.</p>
-						<p>A close method is also passed to the modal component as a prop, in order to hide the modal using a close button inside the modal component.</p>
+            <div>
+               <TextField
+                id="standard-name"
+                label="Name"
+                className={styles.textField}
+                value={popup.calenderTodoObject.title}
+                onChange={popup.onChangeTitle}
+                margin="normal"
+             />
+            </div>
+            <div>
+                <TextField
+                  id="standard-multiline-static"
+                  label="내용"
+                  multiline
+                  rows="4"
+                  defaultValue = {popup.calenderTodoObject.desciption}
+                  className={styles.textField}
+                  onChange={popup.onChangeDescription}
+                  margin="normal"
+                  variant="filled"
+                />
+            </div>
+
+            <Button variant="contained" 
+                    color="primary" 
+                    className={styles.button}
+                    onClick ={popup.concatCalendar}
+                    >
+
+              추가
+            </Button>
+
+           
+
+
+       
+            
             </div>
 
             <div className="modal-footer">
