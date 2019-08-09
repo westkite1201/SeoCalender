@@ -2,10 +2,17 @@ import { observable, action, computed } from 'mobx';
 import moment from 'moment';
 import _ from 'lodash';
 import * as calenderApi from '../lib/api/calenderApi'
+import { toast } from "react-toastify";
+
 export default class PopupStore{
+    /* calender 스토어에 접근하기 위함  */
+    constructor(rootStore) {
+        this.rootStore = rootStore
+    }
+    
     @observable color = ''
     @observable title = ''
-    @observable background = 'red'
+    @observable background = '#FCCB00'
     @observable showTodoModal = false;
     @observable selectPopupDate = '';
     @observable showColorPicker = false;
@@ -13,10 +20,20 @@ export default class PopupStore{
     @observable calenderTodoObject  ={ 
         date : '',
         title : '',
-        desciption: '',
-        background : '', 
+        description: '',
+        background  : '#FCCB00', 
     }
 
+    @action
+    initCalenderObeject = () =>{
+        this.calenderTodoObject  ={ 
+            date : '',
+            title : '',
+            description: '',
+            background  : '#FCCB00', 
+        }
+    
+    }
 
 
 
@@ -30,17 +47,18 @@ export default class PopupStore{
     }
     @action 
     setBackgroundColor = (color) => { 
-        this.calenderTodoObject.background = color.hex
+        let background =  color.hex
+        this.calenderTodoObject.background = background
     }
-
     @action
     onChangeTitle = (e) => {
-        this.calenderTodoObject.title = e.target.value
+        let title = e.target.value
+        this.calenderTodoObject.title = title
     }
     @action
     onChangeDescription = (e) => {
-        console.log(e.target.value)
-        this.calenderTodoObject.desciption = e.target.value
+        let description = e.target.value 
+        this.calenderTodoObject.description = description
     }
     @action
     toggleColorPicker = () => {
@@ -49,27 +67,45 @@ export default class PopupStore{
 
     /* 캘린더 추가  */
     @action
-    concatCalendar = async(date) => {
-        console.log("concatCalendar" , date);
+    concatCalendar = async() => {
+        let tempBackGround = this.calenderTodoObject.background
+        let date = this.calenderTodoObject.date;
+        let getCalenderResponse;
         try{ 
-            const response = await calenderApi.insertCalenderTodo( this.calenderObject )
+            const response = await calenderApi.insertCalenderTodo( this.calenderTodoObject )
             if(response.status == 200){
-                const getCalenderResponse = await calenderApi.getCalender( date );
-                console.log(getCalenderResponse)
+                toast.success('🦄 추가에 성공하였습니다!!', {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    });
 
+                // getCalenderResponse = await calenderApi.getCalender( date );
+                // console.log(getCalenderResponse)
             }
         }catch(e){
+            toast.error('🦄 추가에 실패하였어요!!', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                });
             console.log(e)
         }
-        
         let formatDate = moment(date).format('YYYY-MM-DD')
-        let calenderObjListClone = _.isNil(this.calenderObjectMap.get(formatDate) ) ? [] : this.calenderObjectMap.get(date) 
-        calenderObjListClone.push(this.calenderObject);
-        this.calenderObjectMap.set(formatDate, calenderObjListClone);
+        let calenderObjListClone = _.isNil(this.rootStore.calender.calenderObjectMap.get(formatDate) ) ? [] : this.rootStore.calender.calenderObjectMap.get(formatDate) 
+        var calenderTodoObjectClone = Object.assign({}, (this.calenderTodoObject));
+        calenderObjListClone.push(calenderTodoObjectClone);
+        this.rootStore.calender.calenderObjectMap.set(formatDate, calenderObjListClone);
 
-        this.calenderObject = {
-            date : '',
-            background : this.background,
+        this.calenderTodoObject = {
+            date : date,
+            background : tempBackGround,
             title : '',
             description : ''
         } //초기화

@@ -6,6 +6,9 @@ import { observer, inject, } from 'mobx-react'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { TwitterPicker } from 'react-color';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const styles = theme => ({
     container: {
       display: 'flex',
@@ -63,8 +66,11 @@ class CalenderTodoModal extends Component {
     // this.modalTween.reversed(!this.props.showTodoModal);
   }
   componentWillUnmount(){
+    const { popup } =this.props;
     console.log("componentWillUnmount") 
     window.removeEventListener("keydown", this.keyDownHandler);
+    popup.initCalenderObeject();
+
   }
 
   render() {
@@ -72,7 +78,7 @@ class CalenderTodoModal extends Component {
       popup
     } = this.props;
     let style = {
-      backgroundColor : popup.background  ,
+      backgroundColor : popup.calenderTodoObject.background  ,
       width : '100%',
       height : '50px',
     };
@@ -94,7 +100,7 @@ class CalenderTodoModal extends Component {
             <div className="todo_popup_header">
 
               <div className = 'display_date'>
-                  {popup.selectPopupDate.format('YYYY-MM')}
+                  {popup.selectPopupDate.format('YYYY-MM-DD')}
               </div>
 
               <div className = 'color_block' 
@@ -120,7 +126,7 @@ class CalenderTodoModal extends Component {
             <div>
                <TextField
                 id="standard-name"
-                label="Name"
+                label="제목"
                 className={styles.textField}
                 value={popup.calenderTodoObject.title}
                 onChange={popup.onChangeTitle}
@@ -133,7 +139,7 @@ class CalenderTodoModal extends Component {
                   label="내용"
                   multiline
                   rows="4"
-                  defaultValue = {popup.calenderTodoObject.desciption}
+                  defaultValue = {popup.calenderTodoObject.description}
                   className={styles.textField}
                   onChange={popup.onChangeDescription}
                   margin="normal"
@@ -144,7 +150,7 @@ class CalenderTodoModal extends Component {
             <Button variant="contained" 
                     color="primary" 
                     className={styles.button}
-                    onClick ={popup.concatCalendar}
+                    onClick ={() =>popup.concatCalendar()}
                     >
 
               추가
@@ -162,6 +168,17 @@ class CalenderTodoModal extends Component {
 
           </div>
         </div>
+
+        <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnVisibilityChange
+        draggable
+        pauseOnHover/>
       </div>
     );
   }

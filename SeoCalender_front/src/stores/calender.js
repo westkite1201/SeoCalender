@@ -138,7 +138,7 @@ export default class CalenderStore{
                             todoNum : item.todo_num,
                             date : item.date,
                             title : item.title,
-                            background: item.background,
+                            background: item.color,
                             description : item.description,
                     }
                     let formatDate = moment(item.date).format('YYYY-MM-DD')

@@ -23,7 +23,7 @@ router.post('/insertCalenderTodo',  async(req, res) => {
     DATE :  req.body.date,
     TITLE :  req.body.title,
     DESC :  req.body.desc,
-    COLOR :  req.body.color,
+    COLOR :  req.body.background,
   }
   try{
     let rows = await calenderDaoNew.insertCalenderTodo(data);
