@@ -12,7 +12,7 @@ class CalenderTest extends Component {
       console.log( this.props.todayDate )
     }
      generate = () => {
-      const { todayDate } = this.props;
+      const { todayDate, toggleCalenderTodoModal } = this.props;
       const today = todayDate;
       const startWeek = today.clone().startOf('month').week();
       const endWeek = today.clone().endOf('month').week() === 1 ? 53 : today.clone().endOf('month').week();
@@ -26,7 +26,7 @@ class CalenderTest extends Component {
                 let isSelected = today.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'selected' : '';
                 let isGrayed = current.format('MM') === today.format('MM') ? '' : 'grayed';
                 return (
-                  <div className={`box  ${isSelected} ${isGrayed}`} key={i}>
+                  <div className={`box  ${isSelected} ${isGrayed}`} key={i} onClick ={() => toggleCalenderTodoModal(current)}>
                     <CalenderItem nowDate = {current}/>
                   </div>
                 )
@@ -95,6 +95,7 @@ class CalenderTest extends Component {
 
 
 export default inject(({ calender, popup }) => ({
+  toggleCalenderTodoModal : popup.toggleCalenderTodoModal,
   showTodoModal : popup.showTodoModal,
   todayDate  : calender.todayDate,
   changeMonth : calender.changeMonth,
