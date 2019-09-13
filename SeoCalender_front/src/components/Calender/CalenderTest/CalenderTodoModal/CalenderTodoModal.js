@@ -5,6 +5,8 @@ import { TimelineLite, CSSPlugin } from "gsap/all";
 import { observer, inject, } from 'mobx-react'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import _ from 'lodash'
+import moment from 'moment'
 import { TwitterPicker } from 'react-color';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +32,7 @@ const styles = theme => ({
   });
   
 @inject("popup")
+@inject("calender")
 @observer
 class CalenderTodoModal extends Component {
   constructor(props) {
@@ -75,7 +78,8 @@ class CalenderTodoModal extends Component {
 
   render() {
     const {
-      popup
+      popup,
+      calender
     } = this.props;
     let style = {
       backgroundColor : popup.calenderTodoObject.background  ,
@@ -84,7 +88,26 @@ class CalenderTodoModal extends Component {
     };
     let colors = ['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB']
   
-  
+    let blockList = [];
+    let formatDate =  moment(popup.selectPopupDate).format('YYYY-MM-DD')
+    if( !_.isNil( calender.calenderObjectMap.get(formatDate))){
+      blockList = calender.calenderObjectMap.get(formatDate).map((item, key)=>{
+            if(!_.isNil(item)){
+              let style = {
+                backgroundColor : item.background  ,
+                width : '100%',
+                height : '1rem',
+                color : 'black',
+                fontSize : '0.8rem'
+              }
+              return (
+                  <div style ={ style } key ={key} >
+                    {item.title}
+                  </div>
+              )
+            }
+     })
+   }
     return (
       <div
         className="todo_popup"
@@ -123,44 +146,50 @@ class CalenderTodoModal extends Component {
             </div>
 
             <div className="modal-body">
-            <div>
-               <TextField
-                id="standard-name"
-                label="제목"
-                className={styles.textField}
-                value={popup.calenderTodoObject.title}
-                onChange={popup.onChangeTitle}
-                margin="normal"
-             />
-            </div>
-            <div>
+              <div>
+                {blockList}
+              </div>
+              <div>
                 <TextField
-                  id="standard-multiline-static"
-                  label="내용"
-                  multiline
-                  rows="4"
-                  defaultValue = {popup.calenderTodoObject.description}
+                  id="standard-name"
+                  label="제목"
                   className={styles.textField}
-                  onChange={popup.onChangeDescription}
+                  value={popup.calenderTodoObject.title}
+                  onChange={popup.onChangeTitle}
                   margin="normal"
-                  variant="filled"
-                />
-            </div>
+              />
+              </div>
+              <div>
+                  <TextField
+                    id="standard-multiline-static"
+                    label="내용"
+                    multiline
+                    rows="4"
+                    defaultValue = {popup.calenderTodoObject.description}
+                    className={styles.textField}
+                    onChange={popup.onChangeDescription}
+                    margin="normal"
+                    variant="filled"
+                  />
+              </div>
 
-            <Button variant="contained" 
-                    color="primary" 
-                    className={styles.button}
-                    onClick ={() =>popup.concatCalendar()}
-                    >
+              <div className ="buttonContainer">
+                <Button variant="contained" 
+                        color="primary" 
+                        className={styles.button}
+                        onClick ={() => popup.concatCalendar()}
+                        >
+                  추가
+                </Button>
 
-              추가
-            </Button>
+                <Button variant="contained" 
+                        color="primary" 
+                        className={styles.button}
+                        onClick = {() => popup.toggleCalenderTodoModal() } >
+                  취소
+                </Button>
+              </div>
 
-           
-
-
-       
-            
             </div>
 
             <div className="modal-footer">

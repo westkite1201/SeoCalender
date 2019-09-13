@@ -18,22 +18,8 @@ class CalenderItem extends Component {
         const { 
           nowDate, //parent
           calenderObjectMap , // mobx
-          toggleCalenderTodoModal // mobx
-      } = this.props;
+       } = this.props;
            
-        //console.log(nowDate, holiday)
-        //let day = moment(date).format('DD')
-        /* classNames 모듈 사용  */
-      //   let tdClasses = classNames({
-      //       table : true,
-      //       holiday : holiday,
-      //       saturday: saturday,
-      //       sunday : sunday,
-      //       notpresentMonth : !nowDate, 
-      //       selectedTr: this.state.select }
-      //   ); 
-      
-
         let blockList = [];
         let formatDate =  moment(nowDate).format('YYYY-MM-DD')
     
@@ -60,7 +46,7 @@ class CalenderItem extends Component {
        let day = nowDate.format('D');
 
         return(
-          <div key = {day} onClick = {() =>toggleCalenderTodoModal(nowDate)}>
+          <div key = {day} >
               <span style ={{ width : '200px' }} classname ="text">
                 {day}   
               </span>
