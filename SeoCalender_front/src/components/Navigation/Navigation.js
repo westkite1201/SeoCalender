@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {NavLink} from 'react-router-dom'
+import { observer, inject, } from 'mobx-react'
 import {observable, action} from 'mobx'
-import {observer} from 'mobx-react'
 import axios from 'axios'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff';
@@ -34,25 +34,29 @@ class Navigation extends Component {
     @observable key = '';
     
     componentDidMount = async() =>{
-        vapidPublicKey = await this.getkey()
-        convertedVPkey =  urlB64ToUint8Array(vapidPublicKey);
-        console.log('[SEO][componentDidMount] vapidPublicKey ', vapidPublicKey)
-        console.log('[SEO][componentDidMount] convertedVPkey ', convertedVPkey)
-        /* 서비스 워커 이니셜 라이징  */
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-                navigator.serviceWorker.register('/sw.js').then(
-                    (swReg) => {
-                        //'Service Worker is registered'
-                        swRegistration = swReg;
-                        console.log('oooooo!',swReg)
-                        this.initialiseUI();
-                }).catch(
-                    (error) => {
-                        console.error('Service Worker Error', error);
-                });
-            }else{
-                console.warn('Push messaging is not supported');
-            }
+        const { initServiceWorker } = this.props;
+        initServiceWorker(); 
+        // vapidPublicKey = await this.getkey()
+        // convertedVPkey =  urlB64ToUint8Array(vapidPublicKey);
+        // console.log('[SEO][componentDidMount] vapidPublicKey ', vapidPublicKey)
+        // console.log('[SEO][componentDidMount] convertedVPkey ', convertedVPkey)
+        // /* 서비스 워커 이니셜 라이징  */
+        // if ('serviceWorker' in navigator && 'PushManager' in window) {
+        //         navigator.serviceWorker.register('/sw.js').then(
+        //             (swReg) => {
+        //                 //'Service Worker is registered'
+        //                 swRegistration = swReg;
+        //                 console.log('oooooo!',swReg)
+        //                 this.initialiseUI();
+        //         }).catch(
+        //             (error) => {
+        //                 console.error('Service Worker Error', error);
+        //         });
+        //     }else{
+        //         console.warn('Push messaging is not supported');
+        //     }
+
+    
     }
     getkey = async() => {
         try{
@@ -100,8 +104,6 @@ class Navigation extends Component {
                 const { key } = response.data;
                 return key;
             }
-            
-            
             
             this.button = <NotificationsActiveIcon onClick = {this.unsubscribeUser} />
         }catch(e){
@@ -168,11 +170,28 @@ class Navigation extends Component {
     //     return promise;
     // }
     render() {
+        const {
+                isSubscribed,
+                unsubscribe,
+                subscribeAndPushSend } = this.props; 
         return (
             <div className = 'wrapperRoot'>
                 {this.button}
+                {isSubscribed ? 
+                    <NotificationsActiveIcon onClick = {unsubscribe} />
+                :
+                    <NotificationsOffIcon onClick = {subscribeAndPushSend} />
+                }
             </div>
         )
     }
 }
-export default Navigation
+
+export default inject(({ webpush }) => ({
+    isSubscribed : webpush.isSubscribed,
+    lodingSubscribe : webpush.lodingSubscribe,
+    
+    initServiceWorker : webpush.initServiceWorker,
+    subscribeAndPushSend  :webpush.subscribeAndPushSend,
+    unsubscribe : webpush.unsubscribe
+  }))(observer( Navigation));
