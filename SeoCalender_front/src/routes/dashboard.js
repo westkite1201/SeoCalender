@@ -1,7 +1,7 @@
 // @material-ui/icons
 import CalenderTable from '../components/Calender/CalenderTable'
 import CalenderTest from '../components/Calender/CalenderTest'
-
+import Navigation from '../components/Navigation'
 // <Route exact path = {`${match.url}/notice`} component ={Board}/>
 // <Switch>
 //     <Route path = {`${match.url}/notice/writePosts`} component ={WriteBoard}/>
@@ -11,6 +11,16 @@ import CalenderTest from '../components/Calender/CalenderTest'
 
 
 const dashboardRoutes = [
+  {
+    sideView: true, 
+    //exact : true,
+    path: "/Navigation",
+    sidebarName: "Navigation",
+    navbarName: "Navigation login",
+    icon: Navigation,
+    component: Navigation
+  },
+
   {
     sideView: true, 
     //exact : true,

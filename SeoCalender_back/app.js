@@ -13,6 +13,7 @@ var indexRouter = require('./routes/index');
 // let fileRouter = require('./routes/api/fileController')
 let weatherApi = require('./routes/api/weatherController')
 let calenderApi = require('./routes/api/callenderController')
+let webpushApi  = require('./routes/api/webPushController')
 //var passport = require('./config/passport/localStrategy')
 
 var session = require('express-session');
@@ -92,6 +93,7 @@ app.post('/api/login', (req, res, next) => {
 // app.use('/api/board',boardApi)
 app.use('/api/weather', weatherApi);
 app.use('/api/calender',calenderApi)
+app.use('/api/webpush',webpushApi)
 // app.use('/api/bus', busRouter)
 // app.use('/api/file', fileRouter)
 
@@ -128,6 +130,7 @@ socketLib.connection(io)
 //   req.io = io;
 //   next();
 // });
+
 
 
 
