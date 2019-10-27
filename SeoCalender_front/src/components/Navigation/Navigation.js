@@ -11,23 +11,23 @@ import './Navigation.scss'
 
 
 //base64 코드를 Uint8Array 변환
-const urlB64ToUint8Array =(base64String) => {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-            .replace(/\-/g, '+')
-            .replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return(outputArray)
-}
+// const urlB64ToUint8Array =(base64String) => {
+//     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+//     const base64 = (base64String + padding)
+//             .replace(/\-/g, '+')
+//             .replace(/_/g, '/');
+//     const rawData = window.atob(base64);
+//     const outputArray = new Uint8Array(rawData.length);
+//     for (let i = 0; i < rawData.length; ++i) {
+//         outputArray[i] = rawData.charCodeAt(i);
+//     }
+//     return(outputArray)
+// }
 
-let swRegistration = null;
-let isSubscribed = false;
-let vapidPublicKey = ''
-let convertedVPkey = ''
+// let swRegistration = null;
+// let isSubscribed = false;
+// let vapidPublicKey = ''
+// let convertedVPkey = ''
 @observer
 class Navigation extends Component {
     @observable button = '';
@@ -58,58 +58,58 @@ class Navigation extends Component {
 
     
     }
-    getkey = async() => {
-        try{
-            const response = await webpushApi.getVapidPublicKey()
-            if(response.status === 200){
-                console.log("[SEO][Navigation] key", response)
-                const { key } = response.data;
-                return key;
-            }
-        }catch(e){
-            console.log(e)
-        }
-    }
+    // getkey = async() => {
+    //     try{
+    //         const response = await webpushApi.getVapidPublicKey()
+    //         if(response.status === 200){
+    //             console.log("[SEO][Navigation] key", response)
+    //             const { key } = response.data;
+    //             return key;
+    //         }
+    //     }catch(e){
+    //         console.log(e)
+    //     }
+    // }
     
-    initialiseUI = () => {
-        // Set the initial subscription value
-        swRegistration.pushManager.getSubscription()
-        .then((subscription) => {
-            isSubscribed = !(subscription === null);
-            if (isSubscribed) {
-                //'User IS subscribed.'
-                this.button = <NotificationsActiveIcon onClick = {this.unsubscribeUser} />
-                console.log('issubscribed')
-            } else {
-                this.button = <NotificationsOffIcon onClick = {this.subscribeUser} />
-                console.log('unsubscribed')
-            }
-        });
-    }
-    subscribeUser = async () => {
-        console.log("[SEO][subscribeUser]")
-        let applicationServerKey;
-        applicationServerKey = convertedVPkey;
-        try {
-            isSubscribed = true;
-            let subscription = await swRegistration.pushManager.subscribe({
-                applicationServerKey: applicationServerKey,
-                userVisibleOnly     : true,
-            })
-            console.log("[SEO][subscribeUser] subscription" , subscription)
-            //웹서버에 푸쉬 -노티피케이션을 FCM에게 요청한다.
-            const response = await webpushApi.pushSend(subscription)
-            if(response.status === 200){
-                console.log("[SEO][subscribeUser] response", response)
-                const { key } = response.data;
-                return key;
-            }
+    // initialiseUI = () => {
+    //     // Set the initial subscription value
+    //     swRegistration.pushManager.getSubscription()
+    //     .then((subscription) => {
+    //         isSubscribed = !(subscription === null);
+    //         if (isSubscribed) {
+    //             //'User IS subscribed.'
+    //             this.button = <NotificationsActiveIcon onClick = {this.unsubscribeUser} />
+    //             console.log('issubscribed')
+    //         } else {
+    //             this.button = <NotificationsOffIcon onClick = {this.subscribeUser} />
+    //             console.log('unsubscribed')
+    //         }
+    //     });
+    // }
+    // subscribeUser = async () => {
+    //     console.log("[SEO][subscribeUser]")
+    //     let applicationServerKey;
+    //     applicationServerKey = convertedVPkey;
+    //     try {
+    //         isSubscribed = true;
+    //         let subscription = await swRegistration.pushManager.subscribe({
+    //             applicationServerKey: applicationServerKey,
+    //             userVisibleOnly     : true,
+    //         })
+    //         console.log("[SEO][subscribeUser] subscription" , subscription)
+    //         //웹서버에 푸쉬 -노티피케이션을 FCM에게 요청한다.
+    //         const response = await webpushApi.pushSend(subscription)
+    //         if(response.status === 200){
+    //             console.log("[SEO][subscribeUser] response", response)
+    //             const { key } = response.data;
+    //             return key;
+    //         }
             
-            this.button = <NotificationsActiveIcon onClick = {this.unsubscribeUser} />
-        }catch(e){
-            console.log(e)
-            isSubscribed = false;
-        }
+    //         this.button = <NotificationsActiveIcon onClick = {this.unsubscribeUser} />
+    //     }catch(e){
+    //         console.log(e)
+    //         isSubscribed = false;
+    //     }
 
 
        
@@ -128,29 +128,29 @@ class Navigation extends Component {
         //     .catch((err) => {
         //         console.log('Failed to subscribe the user: ', err);
         //     });
-    }
-    unsubscribeUser = () => {
-        swRegistration.pushManager.getSubscription()
-        .then((subscription) => {
-          if (subscription) {
-            // axios.delete("/api/user/subscribe_info", 
-            //     { headers: {'Authorization': 'bearer '+ localStorage.getItem('jwt')}}
-            // ).then((res) => {
-            //     console.log(res);
-            // });
-            this.button = <NotificationsOffIcon onClick = {this.subscribeUser}/>
-            return subscription.unsubscribe();
-          }
-        })
-        .catch((error) => {
-          console.log('Error unsubscribing', error);
-        })
-        .then(() => {
-          //updateSubscriptionOnServer(null);
-          //'User is unsubscribed.'
-          isSubscribed = false;
-        });
-    }
+    //}
+    // unsubscribeUser = () => {
+    //     swRegistration.pushManager.getSubscription()
+    //     .then((subscription) => {
+    //       if (subscription) {
+    //         // axios.delete("/api/user/subscribe_info", 
+    //         //     { headers: {'Authorization': 'bearer '+ localStorage.getItem('jwt')}}
+    //         // ).then((res) => {
+    //         //     console.log(res);
+    //         // });
+    //         this.button = <NotificationsOffIcon onClick = {this.subscribeUser}/>
+    //         return subscription.unsubscribe();
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.log('Error unsubscribing', error);
+    //     })
+    //     .then(() => {
+    //       //updateSubscriptionOnServer(null);
+    //       //'User is unsubscribed.'
+    //       isSubscribed = false;
+    //     });
+    // }
     // urlB64ToUint8Array =(base64String) => {
     //     const promise = new Promise(
     //         (resolve, reject) => {
