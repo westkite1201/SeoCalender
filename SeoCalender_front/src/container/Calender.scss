@@ -1,0 +1,22 @@
+.box {
+  &:first-child {
+    color: red;
+  }
+  &:last-child {
+    color: #588dff;
+  }
+  &.grayed {
+    color: gray;
+  }
+  &:hover {
+    span.text {
+      background-color: rgba(#588dff, 0.1);
+    }
+  }
+  &.selected {
+    span.text {
+      background-color: #588dff;
+      color: white;
+    }
+  }
+}

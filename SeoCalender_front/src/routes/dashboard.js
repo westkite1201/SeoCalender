@@ -1,7 +1,7 @@
 // @material-ui/icons
-import CalenderTable from '../components/Calender/CalenderTable'
-import CalenderTest from '../components/Calender/CalenderTest'
-
+import CalenderTable from '../components/Calender/CalenderTable';
+import CalenderTest from '../components/Calender/CalenderTest';
+import Calender from '../container/Calender';
 // <Route exact path = {`${match.url}/notice`} component ={Board}/>
 // <Switch>
 //     <Route path = {`${match.url}/notice/writePosts`} component ={WriteBoard}/>
@@ -9,36 +9,41 @@ import CalenderTest from '../components/Calender/CalenderTest'
 // </Switch>
 // <Route path = {`${match.url}/notice/editPosts/:editNumber`} component ={EditBoard}/>
 
-
 const dashboardRoutes = [
   {
-    sideView: true, 
+    sideView: true,
     //exact : true,
-    path: "/CalenderTest",
-    sidebarName: "CalenderTest",
-    navbarName: "CalenderTest login",
+    path: '/CalenderTest',
+    sidebarName: 'CalenderTest',
+    navbarName: 'CalenderTest login',
     icon: CalenderTest,
     component: CalenderTest
   },
 
   {
-    sideView: true, 
-    path: "/CalenderTable",
-    sidebarName: "CalenderTable",
-    navbarName: "CalenderTable",
+    sideView: true,
+    path: '/CalenderTable',
+    sidebarName: 'CalenderTable',
+    navbarName: 'CalenderTable',
     icon: CalenderTable,
     component: CalenderTable
   },
-
+  {
+    sideView: true,
+    path: '/Calender',
+    sidebarName: 'Calender',
+    navbarName: 'Calender',
+    icon: Calender,
+    component: Calender
+  }
   // {
-  //   sideView: true, 
+  //   sideView: true,
   //   path: "/TimerView",
   //   sidebarName: "TimerView",
   //   navbarName: "Material Dashboard",
   //   icon: TimerView,
   //   component: TimerView
   // },
-
 
   //{ redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];

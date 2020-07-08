@@ -1,27 +1,22 @@
-.table{
-    padding: 0rem, 1rem, 2rem 0,3rem;
-
+.table {
+  width: calc(100% / 7);
+  padding-bottom: calc(100% / 7);
 }
 
-.notpresentMonth{
-    
-    background: #ced4da;
+.notpresentMonth {
+  background: #ced4da;
 }
 
-.selectedTr{
-
-    background: #e03131
+.selectedTr {
+  background: #e03131;
 }
-.holiday{
-
-    color : #a61e4d;
+.holiday {
+  color: #a61e4d;
 }
 
-.sunday{
-
-    color : #e03131;
+.sunday {
+  color: #e03131;
 }
-.saturday{
-
-    color : #4dabf7;
+.saturday {
+  color: #4dabf7;
 }
