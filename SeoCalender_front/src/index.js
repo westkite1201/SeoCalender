@@ -1,16 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'mobx-react';
+//import { Provider } from 'mobx-react';
 import './index.css';
 //import './Loading.css'
-import App from './App';
-import Root from './client/Root'
-import RootStore from './stores';
+import Root from './client/Root';
+//import RootStore from './stores';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import rootReducer, { rootSaga } from './modules';
 
-const root = new RootStore(); // *** 루트 스토어 생성
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(rootSaga);
 
-
+// const root = new RootStore(); // *** 루트 스토어 생성
 ReactDOM.render(
-  <Provider {...root}>
+  <Provider store={store}>
     <Root />
-  </Provider>, document.getElementById('root'));
+  </Provider>,
+  document.getElementById('root')
+);
